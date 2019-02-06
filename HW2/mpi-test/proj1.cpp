@@ -1,8 +1,9 @@
 #include <mpi.h>
 #include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 #include <math.h>
-#include <chrono>
+// #include <chrono>
 
 #define PI atan(1)*4
 #define ONE_BY_SQRT_2 1/sqrt(2)
@@ -16,8 +17,8 @@ int main(int argc, char* argv[]){
         return 0;
     }
     std::size_t pos;
-    int N = std::stoi(argv[1], &pos);
-    int R = std::stoi(argv[2], &pos);
+    int N = stoi(argv[1], &pos);
+    int R = stoi(argv[2], &pos);
     // set up MPI
     MPI_Init(&argc, &argv);
     // get communicator size and my rank
@@ -27,9 +28,9 @@ int main(int argc, char* argv[]){
     MPI_Comm_rank(comm, &rank);
     srand(rank);
 
-    int m, m_sum;
+    int m = 0, m_sum = 0;
     double master_PI_sum = 0.0;
-    auto t_start = std::chrono::high_resolution_clock::now();
+    // auto t_start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < R; i++) {
         m = dboard(N/p);
         MPI_Reduce(&m, &m_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -42,8 +43,8 @@ int main(int argc, char* argv[]){
         std::cout << "N=" << N << ", R=" << R << 
             ", P=" << p << ", PI=" << master_PI_sum << std::endl;
         auto t_end = std::chrono::high_resolution_clock::now();
-        std::cout << "Time=" << 
-            std::chrono::duration<double>(t_end-t_start).count() << "sec" << std::endl;
+        // std::cout << "Time=" << 
+        //     std::chrono::duration<double>(t_end-t_start).count() << "sec" << std::endl;
     }
 
     MPI_Finalize();

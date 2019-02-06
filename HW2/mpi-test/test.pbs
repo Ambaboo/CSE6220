@@ -1,5 +1,5 @@
 # This is an example PBS script
-#PBS -N hello
+#PBS -N proj1
 #PBS -l nodes=2:ppn=8
 #PBS -l mem=2gb
 #PBS -l walltime=00:15:00
@@ -10,5 +10,5 @@
 
 cd ~/CSE6220/HW2/mpi-test/
 module load gcc mvapich2/2.2
-make
-mpirun -np 16 ./mpi_hello_world
+mpicxx -lstdc++ -std=c++11 -o proj1 ./proj1.cpp
+mpirun -np 2 ./proj1 4 1
