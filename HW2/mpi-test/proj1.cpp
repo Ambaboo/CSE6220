@@ -3,9 +3,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <math.h>
-#include <ctime>
 
-#define PI atan(1)*4
+#define PI 3.141592653
 #define ONE_BY_SQRT_2 1/sqrt(2)
 
 int dboard(int N);
@@ -16,7 +15,6 @@ int main(int argc, char* argv[]){
         std::cout << "input invalid!" << std::endl;
         return 0;
     }
-    std::clock_t start;
     int N = std::stoi(argv[1]);
     int R = std::stoi(argv[2]);
     // set up MPI
@@ -30,7 +28,7 @@ int main(int argc, char* argv[]){
 
     int m = 0, m_sum = 0;
     double master_PI_sum = 0.0, duration = 0.0;
-    start = std::clock();
+    double t0 =MPI_Wtime();
     for (int i = 0; i < R; i++) {
         m = dboard(N/p);
         MPI_Reduce(&m, &m_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -38,12 +36,13 @@ int main(int argc, char* argv[]){
             master_PI_sum += 2.0 * N / m_sum;
         }
     }
+    MPI_Barrier(MPI_COMM_WORLD);
+    double t1 =MPI_Wtime();
     if (rank == 0) {
         master_PI_sum /= (double)R;
         std::cout << "N=" << N << ", R=" << R << 
             ", P=" << p << ", PI=" << master_PI_sum << std::endl;
-        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-        std::cout << "Time=" << duration << "sec" << std::endl;
+        std::cout << "Time=" << (t1-t0) << "sec" << std::endl;
     }
 
     MPI_Finalize();
