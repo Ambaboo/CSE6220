@@ -42,7 +42,6 @@ int main(int argc, char* argv[]){
         master_PI_sum /= (double)R;
         std::cout << "N=" << N << ", R=" << R << 
             ", P=" << p << ", PI=" << master_PI_sum << std::endl;
-        auto t_end = std::chrono::high_resolution_clock::now();
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
         std::cout << "Time=" << duration << "sec" << std::endl;
     }
